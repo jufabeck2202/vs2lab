@@ -4,7 +4,6 @@ from context import lab_logging
 lab_logging.setup()
 
 cl = rpc.Client()
-cl.run()
 
 base_list = rpc.DBList({'foo'})
 
