@@ -87,10 +87,10 @@ class Server:
             if msgreq is not None:
                 client = msgreq[0]  # see who is the caller
                 msgrpc = msgreq[1]  # fetch call & parameters
-                self.sendAck(client, self.chan)
                 if constRPC.APPEND == msgrpc[0]:  # check what is being requested
+                    self.sendAck(client, self.chan)
                     print("Server: Processing Request")
-                    time.sleep(2)
+                    time.sleep(10)
                     print("Server: Finished processing Request")
                     result = self.append(msgrpc[1], msgrpc[2])  # do local call
                     self.chan.send_to({client}, result)  # return response
