@@ -7,28 +7,32 @@
 import sys
 import time
 import zmq
-
+import constPR
 context = zmq.Context()
 
-# Socket to receive messages on
+
+me = str(sys.argv[1])
+port = ""
+
+if me == "1":
+    port = constPR.REDUCE1
+elif me == "2":
+    port = constPR.REDUCE2
+
+
+print("connected to port "+ port)
+
 receiver = context.socket(zmq.PULL)
-receiver.bind("tcp://*:5558")
+receiver.bind("tcp://" + constPR.HOST + ":" + port)
 
-# Wait for start of batch
-s = receiver.recv()
-
-# Start our clock now
-tstart = time.time()
-
-# Process 100 confirmations
-for task_nbr in range(100):
-    s = receiver.recv()
-    if task_nbr % 10 == 0:
-        sys.stdout.write(':')
+while True:
+   s = receiver.recv_string();
+   print(s)
+"""if not s == "NULL":
+    print(s)
+    if s not in map:
+        map[s] = 1
     else:
-        sys.stdout.write('.')
-    sys.stdout.flush()
+        map[s] += 1"""
 
-# Calculate and report duration of batch
-tend = time.time()
-print("Total elapsed time: %d msec" % ((tend-tstart)*1000))
+

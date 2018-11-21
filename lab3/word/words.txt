@@ -1,26 +1,35 @@
-If you're visiting this page, you're l
-ikely here because you're searching for a random sentence.
-Sometimes a random word just isn't enough, and that is where the random sentence
-generator comes into play. By inputting the desired number, you can make a list of
-as many random sentences as you want or need. Producing random sentences can be help
-ful in a number of different ways.
-For writers, a random sentence can help them get their creative juices flowing.
-Since the topic of the sentence is completely unknown, it forces the writer to be
-creative when the sentence appears. There are a number of different ways a writer
-can use the random sentence for creativity. The most common way to use the sentence
-is to begin a story. Another option is to include it somewhere in the story.
-A much more difficult challenge is to use it to end a story. In any of these
-cases, it forces the writer to think creatively since they have no idea what
-sentence will appear from the tool.
-For those writers who have writers' block, this can be an excellent way to take
-a step to crumbling those walls. By taking the writer away from the subject matter
-that is causing the block, a random sentence may allow them to see the project they're
-working on in a different light and perspective. Sometimes all it takes is to
-get that first sentence down to help break the block.
-It can also be successfully used as a daily exercise to get writers to
-begin writing.
-Being shown a random
-sentence and using it
-to complete a paragraph
-each day can be an excellent
-way to begin any writing session.
+CH BIN HIER DER KAISER!!!11!elf
+Der Heap, er wächst und schrumpft, wächst und schrumpft, wächst und schrumpft.
+Ich sehe schon, viel kopiert aber nix kapiert! So kommen Sie auf keinen Fall durch die Prüfung!
+Student: Der vorgegebene Code von Aufgabe 5 ist ziemlich eklig. Sulzmann: Joa, ist halt kompakt, nicht wahr.
+Ich sehe Sie haben es richtig gemacht. Wenn Sie es jetzt falsch gemacht hätten, wie hätten Sie den Testrahmen schreiben müssen um den Fehler zu finden, jetzt nicht vom Prinzip sondern wie würde das konkret aussehen? Nein nicht ausprogrammieren, sagen Sie mir den Code.
+2. Semester: Ich mache das gerade im Master, sonst macht es an der ganzen Hochschule glaube ich niemand, aber wir haben ja noch Zeit und es ist auch ziemlich trivial deswegen schauen wir uns mal das Lambda Kalkül an. - 30 Sekunden Einführung - So und jetzt mal ein abstrakteres Beispiel zur dynamischen Typisierung.
+In den Sprachen die wir gerade machen geht das nicht, aber in jeder guten Sprache geht sowas. Haskell ist zum Beispiel ne gute Sprache. Go ist auch eine gute Sprache.
+2. Semester zur Funktionalität der JVM Das ist Grundwissen eines jeden Informatikers! Wenn Sie mich nicht hätten könnten Sie wohl nur Java oder was? - betretenes Schweigen
+Mit Java können Sie nachhause gehen!
+Sie kennen nur Java? - Gefrustetes Ausatmen - Viel Spaß im Berufsleben.
+Zur Implementierung von Generics: Das ganze ist ziemlich schlecht implementiert. Die Oma hätte genau das gleiche gemacht.
+Was muss man machen? Was muss man machen? Was müsste man jetzt machen? - Schweigen - Es ist eigentlich ganz einfach, richtig? Richtig.
+Wie macht man das? - Schweigen - Sie wissen schon wir schreiben eine Klausur? - Schweigen - Also Sie müssen mich ja nicht prüfen. Ich kann es ja. Ich prüfe ja Sie, richtig?
+stellt eine Kaskade von mindestens 10 Fragen und erhält keine einzige Antwort - So kann es nicht weitergehen!
+The cool thing is […] but the cool thing is […] and the cool thing is […] but that's just the cool thing, right?
+Auch Mitternachtswissen, Ihre Oma weckt Sie um Mitternacht, dann müssen Sie's runterrattern, Quicksort. Das muss jeder Informatiker wissen, ganz klar.
+Des tolle ist: Java sieht immer mehr aus wie ne echte, gute Programmiersprache.
+Also auch mit C++ kann man ein langes und schönes Leben führen.
+Es ist wirklich n Albtraum C++ teilweise effizient zu kompilieren! Ne, des is wirklich n Albtraum.
+Während die Generics wirklich von Leuten entwickelt wurden die was verstanden haben von der Theorie, sind die Templates eher ein Unfall der Geschichte!
+Meine Lieblingssprache ist Haskell, das ist die coolste Programmiersprache überhaupt.
+Sie dürfen für die Klausur auch die Rückseite mitbenutzen, richtig? Sie dürfen auch die Rückseite benutzen.
+Scht! Schhhhhhht! Es bleibt laut. ICH KANN AUCH SCHREIEN, RICHTIG?! Ich kann auch schreien. Ich schmeiß ja jedes Semester X Studierende raus. Es wird schlagartig totenstill. Breit grinsend: X … größer gleich 0.
+Reißverschlüsse sind zu hören nach einer langen Aufgabenstellung. Sulzmann stellt sich eilig vor die Tür: Niemand verlässt diesen Raum bis ich zwei funktionierende Lösungen gesehen habe!
+Meine Beispiele sind ja meistens nicht grafisch, richtig. Also bei mir muss es nicht immer unbedingt blinken, richtig, da blinkt nichts, richtig.
+Interessiert und lächelnd in die Runde: Dazu noch Fragen? nach einiger Stille enttäuscht und leise: Dazu noch Fragen…
+Hat jemand von Ihnen privat schonmal was mit Go oder Haskell entwickelt? Stille Mein Gott! Was machen se?! Okay. prustet kurz Ned schlimm.
+Bug oder Feature, Bug oder Feature, Bug oder Feature?
+Sulzmann: Hat jemand eine Idee? Vorschläge? Student: Man könnte ja mit einer Schleife… Sulzmann: SO würde ich NICHT anfangen!
+nach einer Erklärung der Vorteile von Inline-Ersetzung Student: Warum setzt man Inline dann nicht immer ein? Sulzmann: Gute Frage, Exzellente Frage. druckst eine Weile herum Gut eigentlich sollten Sie es beantworten können, stellen Sie sich also selbst nochmal die Frage.
+2. Semester: Sie sind alle Bachelor oder?
+Ausführliche Mail bzgl eines Änderungsvorschlages für eine Seminararbeit an Sulzmann → Antwortmail von Sulzmann: „Nein.“
+Die Standardbibliothek in C++, die STL: die ist hooochgradig templey… tem-pla-ti-fi-ziert, ne? Templatifiziert, ne.
+Man findet viel heutzutage im Netz, richtig; des dumme is', viel Blödsinn, richtig.
+Man findet dazu viel im Netz, aber auch viel Wildwuchs, richtig.

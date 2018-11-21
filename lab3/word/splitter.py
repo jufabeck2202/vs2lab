@@ -7,6 +7,8 @@
 import zmq
 import random
 import time
+import re
+import constPR
 
 try:
     raw_input
@@ -16,34 +18,49 @@ except NameError:
 
 context = zmq.Context()
 
-# Socket to send messages on
-sender = context.socket(zmq.PUSH)
-sender.bind("tcp://*:5557")
+# MAPPERS
+m1 = context.socket(zmq.PUSH)
+m1.connect("tcp://" + constPR.HOST + ":" + constPR.MAPPER1)
+m2 = context.socket(zmq.PUSH)
+m2.connect("tcp://" + constPR.HOST + ":" + constPR.MAPPER2)
+m3 = context.socket(zmq.PUSH)
+m3.connect("tcp://" + constPR.HOST + ":" + constPR.MAPPER3)
 
-# Socket with direct access to the sink: used to syncronize start of batch
-sink = context.socket(zmq.PUSH)
-sink.connect("tcp://localhost:5558")
 
 print("Splitter is ready!")
 print("Press Enter when the workers are ready: ")
 _ = raw_input()
 print("Sending tasks to workers…")
 
-# The first message is "0" and signals start of batch
-sink.send(b'0')
 
 # Initialize random number generator
 random.seed()
 
-# Send 1
-file = open("words.txt","r")
-f = file.read()
-for word in f.split():
-    # do something with word
-    print (word)
-    sender.send_string(u'%s' % word)
+# open file, read lines
+with open("words.txt") as f:
+    content = f.readlines()
+    content = [x.strip() for x in content]
 
-print("wrote words")
+i = 0
+for line in content:
+    #remove space
+    #send to mappers
+    line = line.lower()
+    if i%3 == 0:
+        print("send to 3:")
+        m3.send_string(line)
+    elif i%3 == 1:
+        print("send to 1:")
+        m1.send_string(line)
+    elif i%3 == 2:
+        print("send to 2:")
+        m2.send_string(line)
+    i += 1
+
+m1.send_string("EOL")
+m2.send_string("EOL")
+m3.send_string("EOL")
+
 
 # Give 0MQ time to deliver
 time.sleep(1)
