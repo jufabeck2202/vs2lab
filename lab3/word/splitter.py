@@ -24,6 +24,7 @@ sender.bind("tcp://*:5557")
 sink = context.socket(zmq.PUSH)
 sink.connect("tcp://localhost:5558")
 
+print("Splitter is ready!")
 print("Press Enter when the workers are ready: ")
 _ = raw_input()
 print("Sending tasks to workers…")
@@ -34,17 +35,15 @@ sink.send(b'0')
 # Initialize random number generator
 random.seed()
 
-# Send 100 tasks
-total_msec = 0
-for task_nbr in range(100):
+# Send 1
+file = open("words.txt","r")
+f = file.read()
+for word in f.split():
+    # do something with word
+    print (word)
+    sender.send_string(u'%s' % word)
 
-    # Random workload from 1 to 100 msecs
-    workload = random.randint(1, 100)
-    total_msec += workload
-
-    sender.send_string(u'%i' % workload)
-
-print("Total expected cost: %s msec" % total_msec)
+print("wrote words")
 
 # Give 0MQ time to deliver
 time.sleep(1)
