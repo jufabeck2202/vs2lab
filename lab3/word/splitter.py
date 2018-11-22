@@ -46,6 +46,7 @@ for line in content:
     #remove space
     #send to mappers
     line = line.lower()
+    line = re.sub('[!@#$:,.„“,?]', '', line)
     if i%3 == 0:
         print("send to 3:")
         m3.send_string(line)
