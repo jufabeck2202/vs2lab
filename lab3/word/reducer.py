@@ -18,7 +18,7 @@ elif me == "2":
 
 receiver = context.socket(zmq.PULL)
 receiver.bind("tcp://" + constPR.HOST + ":" + port)
-print("Reducer connected to port "+ port)
+print("Reducer "+me+" connected to port "+ port)
 
 
 map = {}

@@ -38,6 +38,7 @@ sendTo1 =0
 sendTo2 = 0
 sendTo3 = 0
 print("Press Enter when the workers are ready: ")
+
 while True:
     _ = raw_input()
     for line in content:
