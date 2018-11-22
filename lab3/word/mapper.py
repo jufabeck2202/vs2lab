@@ -1,11 +1,3 @@
-# Task worker
-# Connects PULL socket to tcp://localhost:5557
-# Collects workloads from ventilator via that socket
-# Connects PUSH socket to tcp://localhost:5558
-# Sends results to sink via that socket
-#
-# Author: Lev Givon <lev(at)columbia(dot)edu>
-
 import sys
 import time
 import zmq
@@ -23,11 +15,10 @@ elif me == "2":
 elif me == "3":
     port = constPR.MAPPER3
 
-print("connected to port "+ port)
 # Socket to the splitter
-
 receiver = context.socket(zmq.PULL)
 receiver.bind("tcp://" + constPR.HOST + ":" + port)
+print("Mapper "+me+" connected to port "+ port)
 
 
 # Reducer to send messages
@@ -37,16 +28,18 @@ r2 = context.socket(zmq.PUSH)
 r2.connect("tcp://" + constPR.HOST + ":" + constPR.REDUCE2)
 
 # Process tasks forever
-print("Mapper Started")
-firstHalf = []
+print("Mapper"+ me + "started, waiting for data")
+sendTo1 = 0
+sendTo2 = 0
 while True:
     s = receiver.recv_string()
     #send half the words to 1 the rest to 2
     for word in s.split():
-        if 97 <= ord(word[0][0]) < 110:
+        if 97 <= ord(word[0][0]) < 109:
             r1.send_string(word)
+            sendTo1+=1
         else:
             r2.send_string(word)
-
-
-print("finished working")
+            sendTo2+=1
+        sys.stdout.write("Send to Reducer 1: %d | Send to Reducer 2: %d   \r" % (sendTo1, sendTo2))
+        sys.stdout.flush()

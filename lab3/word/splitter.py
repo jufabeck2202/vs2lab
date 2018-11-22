@@ -1,13 +1,8 @@
-# Task ventilator
-# Binds PUSH socket to tcp://localhost:5557
-# Sends batch of tasks to workers via that socket
-#
-# Author: Lev Givon <lev(at)columbia(dot)edu>
-
 import zmq
 import random
 import time
 import re
+import sys
 import constPR
 
 try:
@@ -27,10 +22,7 @@ m3 = context.socket(zmq.PUSH)
 m3.connect("tcp://" + constPR.HOST + ":" + constPR.MAPPER3)
 
 
-print("Splitter is ready!")
-print("Press Enter when the workers are ready: ")
-_ = raw_input()
-print("Sending tasks to workers…")
+print("Splitter Ready!")
 
 
 # Initialize random number generator
@@ -42,21 +34,29 @@ with open("words.txt") as f:
     content = [x.strip() for x in content]
 
 i = 0
-for line in content:
-    #remove space
-    #send to mappers
-    line = line.lower()
-    line = re.sub('[!@#$:,.„“,?]', '', line)
-    if i%3 == 0:
-        print("send to 3:")
-        m3.send_string(line)
-    elif i%3 == 1:
-        print("send to 1:")
-        m1.send_string(line)
-    elif i%3 == 2:
-        print("send to 2:")
-        m2.send_string(line)
-    i += 1
+sendTo1 =0
+sendTo2 = 0
+sendTo3 = 0
+print("Press Enter when the workers are ready: ")
+while True:
+    _ = raw_input()
+    for line in content:
+        #remove space
+        #send to mappers
+        line = line.lower()
+        line = re.sub('[!@#$:,.„“,?]', '', line)
+        if i%3 == 0:
+            m3.send_string(line)
+            sendTo3 +=1
+        elif i%3 == 1:
+            m1.send_string(line)
+            sendTo1+=1
+        elif i%3 == 2:
+            m2.send_string(line)
+            sendTo2+=1
+        sys.stdout.write("Send to M1: %d | Send to M2: %d | Send to M3: %d  \r" % (sendTo1, sendTo2,sendTo3))
+        sys.stdout.flush()
+        i += 1
 
 
 
