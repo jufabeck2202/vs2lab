@@ -57,9 +57,6 @@ for line in content:
         m2.send_string(line)
     i += 1
 
-m1.send_string("EOL")
-m2.send_string("EOL")
-m3.send_string("EOL")
 
 
 # Give 0MQ time to deliver

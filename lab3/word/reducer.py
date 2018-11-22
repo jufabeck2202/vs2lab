@@ -7,7 +7,9 @@
 import sys
 import time
 import zmq
+import pprint
 import constPR
+pp = pprint.PrettyPrinter(indent=4)
 context = zmq.Context()
 
 
@@ -24,15 +26,13 @@ print("connected to port "+ port)
 
 receiver = context.socket(zmq.PULL)
 receiver.bind("tcp://" + constPR.HOST + ":" + port)
-
+map = {}
 while True:
-   s = receiver.recv_string();
-   print(s)
-"""if not s == "NULL":
-    print(s)
+    s = receiver.recv_string();
     if s not in map:
         map[s] = 1
     else:
-        map[s] += 1"""
-
+        map[s] += 1
+    print("###########################")
+    pp.pprint(map)
 
