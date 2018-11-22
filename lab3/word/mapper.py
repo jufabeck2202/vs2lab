@@ -28,7 +28,7 @@ r2 = context.socket(zmq.PUSH)
 r2.connect("tcp://" + constPR.HOST + ":" + constPR.REDUCE2)
 
 # Process tasks forever
-print("Mapper"+ me + "started, waiting for data")
+print("Mapper "+ me + "started, waiting for data")
 sendTo1 = 0
 sendTo2 = 0
 while True:
