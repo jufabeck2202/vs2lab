@@ -11,6 +11,8 @@ import logging
 import sys
 import time
 from multiprocessing import Process
+import random
+import math
 
 import chordnode as chord_node
 import constChord
@@ -25,14 +27,14 @@ if __name__ == "__main__":  # if script is started from command line
 
     # Check for command line parameters m, n.
     if len(sys.argv) > 2:
-        m = int(sys.argv[1])
-        n = int(sys.argv[2])
+        m = int(sys.argv[1]) #number of bits
+        n = int(sys.argv[2]) #number of nods
 
     # Create a communication channel.,.  ö,
     chan = lab_channel.Channel(n_bits=m)
     chan.channel.flushall()
 
-
+    #klasse
     class DummyChordClient:
         """A dummy client template with the channel boilerplate"""
 
@@ -42,14 +44,21 @@ if __name__ == "__main__":  # if script is started from command line
 
         def run(self):
             self.channel.bind(self.node_id)
-            print("Implement me pls...")
-            chan.send_to(  # a final multicast
-                {i.decode() for i in list(self.channel.channel.smembers('node'))},
-                constChord.STOP)
+            destination = [random.choice(list(self.channel.channel.smembers('node'))).decode()]
+            key = random.randint(0,math.pow(2,m)-1)
+            print("Destination:",destination, " Key:",key)
+            chan.send_to(destination,(constChord.LOOKUP_REQ,key))
+            while True:
+                message = self.channel.receive_from_any()
+                sender: str = message[0]  # Identify the sender
+                request = message[1]  # And the actual request
+                if request[0] == constChord.LOOKUP_REP:
+                    print("Ende im gelände",request)
+                    chan.send_to({i.decode() for i in list(self.channel.channel.smembers('node'))},constChord.STOP)
+                    break
 
-
-    # Init n chord nodes and a clint
-    nodes = [chord_node.ChordNode(chan) for i in range(n)]
+    # Init n chord nodes and a client
+    nodes = [chord_node.ChordNode(chan) for node in range(n)]
     client = DummyChordClient(chan)
 
     # start n chord nodes in separate processes

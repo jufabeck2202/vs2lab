@@ -4,7 +4,7 @@ Simple implementation of a chord DHT (distributed hash table)
 - communication via lab_channel
 - channel-based node management for simplification
 - search local succ via finger table
-- each chord node runs a ChordNode instance for maintaining the ring and local
+- each chord node ruins a ChordNode instance for maintaining the ring and local
   succ lookup
 """
 
@@ -97,19 +97,23 @@ class ChordNode:
         self.finger_table[0] = self.node_list[self.node_list.index(self.node_id) - 1]  # Predecessor
         self.finger_table[1:] = [self.finger(i) for i in range(1, self.n_bits + 1)]  # Successors
 
-    def local_successor_node(self, key) -> int:
+    def local_successor_node(self, key) -> (int,bool):
         """
         Locate successor of a key in local finger table
         :param key: key to be located
         :return: located node name
         """
+        print("Local Finger Table of "+str(self.node_id)+": ",self.finger_table)
         if self.in_between(key, self.finger_table[0] + 1, self.node_id + 1):  # key in (FT[0],self]
-            return self.node_id  # node is responsible
+            print("node is responsible")
+            return self.node_id,True  # node is responsible
         elif self.in_between(key, self.node_id + 1, self.finger_table[1]):  # key in (self,FT[1]]
-            return self.finger_table[1]  # successor responsible
+            print("successor responsible")
+            return self.finger_table[1],False # successor responsible
         for i in range(1, self.n_bits + 1):  # go through rest of FT
             if self.in_between(key, self.finger_table[i], self.finger_table[(i + 1) % self.n_bits]):
-                return self.finger_table[i]  # key in [FT[i],FT[i+1])
+                print("go through rest of Finger Table Finger Table",i)
+                return self.finger_table[i],False  # key in [FT[i],FT[i+1])
 
     def run(self):
         self.channel.bind(str(self.node_id))  # bind current pid
@@ -148,8 +152,14 @@ class ChordNode:
                                  .format(self.node_id, int(request[1]), int(sender)))
 
                 # look up and return local successor 
-                next_id: int = self.local_successor_node(request[1])
-                self.channel.send_to([sender], (constChord.LOOKUP_REP, next_id))
+                next_id, rec = self.local_successor_node(request[1])
+
+                print("send to next channel",next_id,"key",request[1])
+                if not rec:
+                    self.channel.send_to([str(next_id)], (constChord.LOOKUP_REQ, request[1]))
+                else:
+                    clients = list(self.channel.channel.smembers('client'))
+                    self.channel.send_to([str(clients[0].decode())], (constChord.LOOKUP_REP, next_id))
 
                 # Finally do a sanity check
                 if not self.channel.exists(next_id):  # probe for existence
@@ -169,6 +179,7 @@ class ChordNode:
             self.recompute_finger_table()  # adjust finger-table based on updated node set
 
         # print finger table status before termination
+
         print("FT[{:04n}]: {}"
               .format(self.node_id, ["{:04n}"
                       .format(finger_node) for finger_node in self.finger_table]))
