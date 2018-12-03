@@ -4,7 +4,7 @@
     <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="ignoredPackages">
         <value>
-          <list size="44">
+          <list size="53">
             <item index="0" class="java.lang.String" itemvalue="traitlets" />
             <item index="1" class="java.lang.String" itemvalue="decorator" />
             <item index="2" class="java.lang.String" itemvalue="jupyter-core" />
@@ -49,6 +49,15 @@
             <item index="41" class="java.lang.String" itemvalue="jupyter-console" />
             <item index="42" class="java.lang.String" itemvalue="rpyc" />
             <item index="43" class="java.lang.String" itemvalue="webencodings" />
+            <item index="44" class="java.lang.String" itemvalue="autopep8" />
+            <item index="45" class="java.lang.String" itemvalue="lazy-object-proxy" />
+            <item index="46" class="java.lang.String" itemvalue="mccabe" />
+            <item index="47" class="java.lang.String" itemvalue="pylint" />
+            <item index="48" class="java.lang.String" itemvalue="rope" />
+            <item index="49" class="java.lang.String" itemvalue="wrapt" />
+            <item index="50" class="java.lang.String" itemvalue="isort" />
+            <item index="51" class="java.lang.String" itemvalue="pycodestyle" />
+            <item index="52" class="java.lang.String" itemvalue="astroid" />
           </list>
         </value>
       </option>

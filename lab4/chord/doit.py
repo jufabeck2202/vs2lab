@@ -14,6 +14,7 @@ from multiprocessing import Process
 
 import chordnode as chord_node
 import constChord
+
 from context import lab_channel, lab_logging
 
 lab_logging.setup(stream_level=logging.INFO)
