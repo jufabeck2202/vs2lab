@@ -46,7 +46,7 @@ if __name__ == "__main__":  # if script is started from command line
             self.channel.bind(self.node_id)
             destination = [random.choice(list(self.channel.channel.smembers('node'))).decode()]
             key = random.randint(0,math.pow(2,m)-1)
-            print("Destination:",destination, " Key:",key)
+            print("Sending Request to:",destination, " for Key:",key)
             chan.send_to(destination,(constChord.LOOKUP_REQ,key))
             while True:
                 message = self.channel.receive_from_any()
