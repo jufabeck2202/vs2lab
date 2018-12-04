@@ -53,7 +53,8 @@ if __name__ == "__main__":  # if script is started from command line
                 sender: str = message[0]  # Identify the sender
                 request = message[1]  # And the actual request
                 if request[0] == constChord.LOOKUP_REP:
-                    print("Ende im gelände",request)
+                    print("#########################################")
+                    print("Node ",request[1]," is responsible for ",key)
                     chan.send_to({i.decode() for i in list(self.channel.channel.smembers('node'))},constChord.STOP)
                     break
 
