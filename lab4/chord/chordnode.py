@@ -158,9 +158,13 @@ class ChordNode:
                 if not rec:
                     print("\tsend to next channel", next_id, "key", request[1])
                     self.channel.send_to([str(next_id)], (constChord.LOOKUP_REQ, request[1]))
-                else:
-                    clients = list(self.channel.channel.smembers('client'))
-                    self.channel.send_to([str(clients[0].decode())], (constChord.LOOKUP_REP, next_id))
+                    print("\twaiting....")
+                    rec_message = self.channel.receive_from([str(next_id)])
+                    rec_request = rec_message[1]  # And the actual request
+                    next_id = rec_request[1]
+                    print("In Node: ",self.node_id," recieved:",rec_message)
+
+                self.channel.send_to([sender], (constChord.LOOKUP_REP, next_id))
 
                 # Finally do a sanity check
                 if not self.channel.exists(next_id):  # probe for existence
