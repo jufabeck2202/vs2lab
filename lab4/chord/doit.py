@@ -49,7 +49,7 @@ if __name__ == "__main__":  # if script is started from command line
             print("Sending Request to:",destination, " for Key:",key)
             chan.send_to(destination,(constChord.LOOKUP_REQ,key))
             while True:
-                message = self.channel.receive_from_any()
+                message = self.channel.receive_from(destination)
                 sender: str = message[0]  # Identify the sender
                 request = message[1]  # And the actual request
                 if request[0] == constChord.LOOKUP_REP:
