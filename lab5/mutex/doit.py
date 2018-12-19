@@ -66,16 +66,14 @@ if __name__ == "__main__":  # if script is started from command line
             args=(m, Process, bar1, bar2))
         children.append(peer_proc)
         peer_proc.start()
-
     # terminate a random process after some time (10 seconds)
-    time.sleep(10)
+    time.sleep(5)
     proc_id = random.randint(0, len(children) - 1)
     proc_to_crash = children[proc_id]
     del(children[proc_id])    
 
     proc_to_crash.terminate()
     proc_to_crash.join()
-
     logger.warning("A process has crashed: {}".format(proc_to_crash))
 
     # wait for peer procs to finish

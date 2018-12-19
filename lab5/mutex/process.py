@@ -80,11 +80,37 @@ class Process:
         return self.queue[0][1] == self.process_id and len(self.other_processes) == len(processes_with_later_message)
 
     def __receive(self):
-        msg = self.channel.receive_from(self.other_processes)[1]  # Pick up any message
+        msg = self.channel.receive_from(self.other_processes,5)
+        if msg is None:
+            print()
+            print("Timeout detected in {} with Queue {} \n Sending Ping".format(self.process_id, self.queue))
 
+            self.channel.send_to(self.other_processes,constMutex.PING)
+            recived_pongs = []
+            while len(recived_pongs) is not len(self.other_processes):
+                msg = self.channel.receive_from(self.other_processes, 5)
+                if msg is None:
+                    break
+                recived_pongs.append(msg[0])
+            offline_proc = list(set(self.other_processes) - set(recived_pongs))[0]
+            for i in self.queue:
+                if int(i[1]) is int(offline_proc):
+                    self.queue.remove(i)
+            self.other_processes.remove(offline_proc)
+            self.all_processes.remove(offline_proc)
+            #make sure process id is on postion [0]
+            self.all_processes.remove(str(self.process_id))
+            self.all_processes.insert(0, str(self.process_id))
+            self.clock = self.clock + 1
+            print("{} Removed Pro {}, own Queue {}".format(self.process_id,offline_proc,self.queue))
+
+            self.__cleanup_queue()  # Finally sort and cleanup the queue
+            return
+
+        msgFrom = msg[0]
+        msg = msg[1]
         self.clock = max(self.clock, msg[0])  # Adjust clock value...
         self.clock = self.clock + 1  # ...and increment
-
         self.logger.debug("Process {} received {} from {}.".format(
             self.process_id,
             "ENTER" if msg[2] == constMutex.ENTER
@@ -97,6 +123,8 @@ class Process:
             self.__allow_to_enter(msg[1])
         elif msg[2] == constMutex.ALLOW:
             self.queue.append(msg)  # Append an ALLOW
+        elif msg[2] == constMutex.PING:
+            self.channel.send_to(msgFrom, "pong")
         elif msg[2] == constMutex.RELEASE:
             # assure release requester indeed has access (his ENTER is first in queue)
             assert self.queue[0][1] == msg[1] and self.queue[0][2] == constMutex.ENTER
@@ -121,10 +149,13 @@ class Process:
             # Try to enter critical section if this process is first in list.
             # Occasionally try to enter if not first in list.
             # Only do that if there are any other processes left.
+            #print(self.all_processes, " ", self.process_id != self.all_processes[-1], " ID",self.process_id)
+            print("Process id: {} self.all_processes: {}".format(self.process_id,self.all_processes))
             if self.process_id != self.all_processes[-1] and \
                     (self.process_id == self.all_processes[0] or \
                         random.choice([True, False])):
                 self.logger.debug("Process {} wants to ENTER CS at CLOCK {}.".format(self.process_id, self.clock))
+                print("Process {} wants to ENTER CS at CLOCK {}.".format(self.process_id, self.clock))
                 self.__request_to_enter()
                 while not self.__allowed_to_enter():
                     self.__receive()
@@ -132,6 +163,9 @@ class Process:
                 # Stay in CS for some time ...
                 sleep_time = random.randint(0, 2)
                 self.logger.debug("Process {} enters CS for {} seconds.".format(self.process_id, sleep_time))
+                print("Process {} enters CS for {} seconds.".format(self.process_id, sleep_time))
+                print(" Queue{}, Own Clock {}.".format(self.queue, self.clock))
+
                 print(" CS IN  : {}".format(self.process_id.zfill(3)))
                 time.sleep(sleep_time)
                 print(" CS OUT : {}".format(self.process_id.zfill(3)))
