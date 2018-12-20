@@ -86,19 +86,19 @@ class Process:
             print("Timeout detected in {} with Queue {} \n Sending Ping".format(self.process_id, self.queue))
 
             self.channel.send_to(self.other_processes,constMutex.PING)
-            recived_pongs = []
-            while len(recived_pongs) is not len(self.other_processes):
+            received_pongs = []
+            while len(received_pongs) is not len(self.other_processes):
                 msg = self.channel.receive_from(self.other_processes, 5)
                 if msg is None:
                     break
-                recived_pongs.append(msg[0])
-            offline_proc = list(set(self.other_processes) - set(recived_pongs))[0]
+                received_pongs.append(msg[0])
+            offline_proc = list(set(self.other_processes) - set(received_pongs))[0]
             for i in self.queue:
                 if int(i[1]) is int(offline_proc):
                     self.queue.remove(i)
             self.other_processes.remove(offline_proc)
             self.all_processes.remove(offline_proc)
-            #make sure process id is on postion [0]
+            #make sure process id is in postion [0]
             self.all_processes.remove(str(self.process_id))
             self.all_processes.insert(0, str(self.process_id))
             self.clock = self.clock + 1
@@ -150,12 +150,12 @@ class Process:
             # Occasionally try to enter if not first in list.
             # Only do that if there are any other processes left.
             #print(self.all_processes, " ", self.process_id != self.all_processes[-1], " ID",self.process_id)
-            print("Process id: {} self.all_processes: {}".format(self.process_id,self.all_processes))
+            #print("Process id: {} self.all_processes: {}".format(self.process_id,self.all_processes))
             if self.process_id != self.all_processes[-1] and \
                     (self.process_id == self.all_processes[0] or \
                         random.choice([True, False])):
                 self.logger.debug("Process {} wants to ENTER CS at CLOCK {}.".format(self.process_id, self.clock))
-                print("Process {} wants to ENTER CS at CLOCK {}.".format(self.process_id, self.clock))
+                #print("Process {} wants to ENTER CS at CLOCK {}.".format(self.process_id, self.clock))
                 self.__request_to_enter()
                 while not self.__allowed_to_enter():
                     self.__receive()
