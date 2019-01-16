@@ -4,9 +4,9 @@ import logging
 # coordinator messages
 from const2PC import VOTE_REQUEST, GLOBAL_COMMIT, GLOBAL_ABORT
 # participant decissions
-from const2PC import LOCAL_SUCCESS, LOCAL_ABORT
+from const2PC import LOCAL_SUCCESS, LOCAL_ABORT,PREPARE_COMMIT
 # participant messages
-from const2PC import VOTE_COMMIT, VOTE_ABORT, NEED_DECISION
+from const2PC import VOTE_COMMIT, VOTE_ABORT, NEED_DECISION,READY_COMMIT
 # misc constants
 from const2PC import TIMEOUT
 
@@ -35,7 +35,7 @@ class Participant:
     @staticmethod
     def _do_work():
         # Simulate local activities that may succeed or not
-        return LOCAL_ABORT if random.random() > 2/3 else LOCAL_SUCCESS
+        return LOCAL_SUCCESS #LOCAL_ABORT if random.random() > 2/3 else LOCAL_SUCCESS
 
     def _enter_state(self, state):
         self.stable_log.info(state)  # Write to recoverable persistant log file
@@ -72,9 +72,9 @@ class Participant:
             # we are ready to proceed the joint commit
             else:
                 assert decision == LOCAL_SUCCESS
-                self._enter_state('READY')
-
                 # Notify coordinator about local commit vote
+                self._enter_state('READY')
+                #send Vote Commit to coordinator
                 self.channel.send_to(self.coordinator, VOTE_COMMIT)
 
                 # Wait for coordinator to notify the final outcome
@@ -98,11 +98,21 @@ class Participant:
         # Change local state based on the outcome of the joint commit protocol
         # Note: If the protocol has blocked due to coordinator crash,
         # we will never reach this point
-        if decision == GLOBAL_COMMIT:
-            self._enter_state('COMMIT')
+        if decision == PREPARE_COMMIT:
+            self._enter_state('PREPARE_COMMIT')
+            self.channel.send_to(self.coordinator, READY_COMMIT)
+
         else:
             assert decision in [GLOBAL_ABORT, LOCAL_ABORT]
             self._enter_state('ABORT')
+            return "Participant {} terminated in state {} due to {}.".format(
+                self.participant, self.state, decision)
+
+        msg = self.channel.receive_from(self.coordinator, TIMEOUT)
+        if msg[1] == GLOBAL_COMMIT:
+            self._enter_state("COMMIT")
+            return "Participant {} terminated in state {} due to {}.".format(
+                self.participant, self.state, "COMMIT")
 
         # Help any other participant when coordinator crashed
         num_of_others = len(self.all_participants) - 1
