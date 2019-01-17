@@ -35,7 +35,7 @@ class Participant:
     @staticmethod
     def _do_work():
         # Simulate local activities that may succeed or not
-        return LOCAL_SUCCESS #LOCAL_ABORT if random.random() > 2/3 else LOCAL_SUCCESS
+        return LOCAL_ABORT if random.random() > 2/3 else LOCAL_SUCCESS
 
     def _enter_state(self, state):
         self.stable_log.info(state)  # Write to recoverable persistant log file
@@ -65,6 +65,7 @@ class Participant:
 
             # If local decision is negative,
             # then vote for abort and quit directly
+            # Fail
             if decision == LOCAL_ABORT:
                 self.channel.send_to(self.coordinator, VOTE_ABORT)
 
@@ -79,19 +80,10 @@ class Participant:
 
                 # Wait for coordinator to notify the final outcome
                 msg = self.channel.receive_from(self.coordinator, TIMEOUT)
-
-                if not msg:  # Crashed coordinator
-                    # Ask all processes for their decisions
-                    self.channel.send_to(self.all_participants, NEED_DECISION)
-                    while True:
-                        msg = self.channel.receive_from_any()
-                        # If someone reports a final decision,
-                        # we locally adjust to it
-                        if msg[1] in [
-                                GLOBAL_COMMIT, GLOBAL_ABORT, LOCAL_ABORT]:
-                            decision = msg[1]
-                            break
-
+                if not msg:  # Crashed coordinator im wait
+                    self._enter_state('ABORT')
+                    return "Participant {} terminated in state {}".format(
+                        self.participant, self.state)
                 else:  # Coordinator came to a decision
                     decision = msg[1]
 
@@ -99,7 +91,10 @@ class Participant:
         # Note: If the protocol has blocked due to coordinator crash,
         # we will never reach this point
         if decision == PREPARE_COMMIT:
-            self._enter_state('PREPARE_COMMIT')
+            self._enter_state('PRECOMMIT')
+            if random.random() > 2 / 3:  # simulate a crash
+                return "Participant {} terminated in state {}".format(
+                    self.participant, self.state)
             self.channel.send_to(self.coordinator, READY_COMMIT)
 
         else:
@@ -108,19 +103,18 @@ class Participant:
             return "Participant {} terminated in state {} due to {}.".format(
                 self.participant, self.state, decision)
 
-        msg = self.channel.receive_from(self.coordinator, TIMEOUT)
-        if msg[1] == GLOBAL_COMMIT:
+        msg = self.channel.receive_from(self.coordinator,TIMEOUT*2)
+
+        if not msg:
+            #Koordinator im Precommit
+            self._enter_state('ABORT')
+            return "Participant {} terminated in state {}".format(
+                self.participant, self.state)
+
+        elif msg[1] == GLOBAL_COMMIT:
             self._enter_state("COMMIT")
             return "Participant {} terminated in state {} due to {}.".format(
                 self.participant, self.state, "COMMIT")
-
-        # Help any other participant when coordinator crashed
-        num_of_others = len(self.all_participants) - 1
-        while num_of_others > 0:
-            num_of_others -= 1
-            msg = self.channel.receive_from(self.all_participants, TIMEOUT * 2)
-            if msg and msg[1] == NEED_DECISION:
-                self.channel.send_to({msg[0]}, decision)
 
         return "Participant {} terminated in state {} due to {}.".format(
             self.participant, self.state, decision)
